@@ -109,7 +109,7 @@ export default function Post({ postData }: PostProps) {
             style={{ top: `${heart.top}px`, left: `${heart.left}px` }}
             sx={{
               fontSize: 80,
-              color: theme.palette.like.main, // Use theme color
+              color: theme.palette.like.main,
             }}
           />
         ))}
@@ -177,8 +177,10 @@ export default function Post({ postData }: PostProps) {
             placeholder="Add a comment…"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            InputProps={{
-              disableUnderline: true,
+            slotProps={{
+              input: {
+                disableUnderline: true,
+              },
             }}
           />
           <Button

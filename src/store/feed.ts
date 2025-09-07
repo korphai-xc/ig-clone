@@ -1,4 +1,4 @@
-import { atom } from "jotai";
+import { atom } from 'jotai';
 
 interface User {
   username: string;
@@ -21,3 +21,5 @@ export interface Post {
 
 export const postsAtom = atom<Post[]>([]);
 export const isLoadingAtom = atom(false);
+export const isSearchModeAtom = atom<boolean>(false);
+export const selectedBreedAtom = atom<string>('');

@@ -1,33 +1,57 @@
-"use client";
-import React from "react";
-import { useTheme } from "@mui/material/styles";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
-import ExploreIcon from "@mui/icons-material/Explore";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import MenuIcon from "@mui/icons-material/Menu";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { useMediaQuery } from "@mui/material";
-import { Drawer } from "./styles";
+import React from 'react';
+import { useTheme } from '@mui/material/styles';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import ExploreIcon from '@mui/icons-material/Explore';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { useMediaQuery } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Drawer } from './styles';
+import SearchBox from '../SearchBox';
 
-const menuItems = [
-  { name: "Home", icon: <HomeIcon /> },
-  { name: "Search", icon: <SearchIcon /> },
-  { name: "Explore", icon: <ExploreIcon /> },
-  { name: "Notifications", icon: <FavoriteBorderIcon /> },
-  { name: "Profile", icon: <AccountCircleIcon /> },
-];
-
-export default function SideMenu() {
+export default function SideMenu({ onBreedSelect }: { onBreedSelect?: (breed: string) => void }) {
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = React.useState(!isTablet);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState("");
+  const router = useRouter();
+
+  const menuItems = [
+    { 
+      name: "Home", 
+      icon: <HomeIcon />, 
+      action: () => router.push('/') 
+    },
+    { 
+      name: "Search", 
+      icon: <SearchIcon />, 
+      action: () => setIsSearchOpen(true) 
+    },
+    { 
+      name: "Explore", 
+      icon: <ExploreIcon />, 
+      action: () => {}
+    },
+    { 
+      name: "Notifications", 
+      icon: <FavoriteBorderIcon />, 
+      action: () => {}
+    },
+    { 
+      name: "Profile", 
+      icon: <AccountCircleIcon />, 
+      action: () => {}
+    },
+  ];
 
   React.useEffect(() => {
     setOpen(!isTablet);
@@ -35,7 +59,7 @@ export default function SideMenu() {
 
   return (
     <Drawer variant="permanent" open={open}>
-      <List>
+      <List className="title side-menu">
         <ListItem disablePadding sx={{ display: "block" }}>
           <ListItemButton
             sx={{
@@ -63,27 +87,43 @@ export default function SideMenu() {
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+            {item.name === "Search" && isSearchOpen && (
+              <SearchBox
+                open={isSearchOpen}
+                value={searchValue}
+                onChange={setSearchValue}
+                onClose={() => {
+                  setIsSearchOpen(false);
+                  setSearchValue("");
                 }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.name}
-                sx={{ opacity: open ? 1 : 0 }}
+                drawerOpen={open}
+                enableBreedSearch={true}
               />
-            </ListItemButton>
+            )}
+            {item.name !== "Search" || !isSearchOpen ? (
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                onClick={item.action}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            ) : null}
           </ListItem>
         ))}
       </List>

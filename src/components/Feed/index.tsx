@@ -1,9 +1,9 @@
-"use client";
-import { useAtom } from "jotai";
-import { useEffect, useRef, useCallback } from "react";
-import { postsAtom, isLoadingAtom } from "@/store/feed";
-import Post from "../Post";
-import { Box, Button, CircularProgress } from "@mui/material";
+'use client';
+import { useAtom } from 'jotai';
+import React, { useEffect, useRef, useCallback } from 'react';
+import { postsAtom, isLoadingAtom } from '@/store/feed';
+import Post from '../Post';
+import { Box, Button, CircularProgress } from '@mui/material';
 
 const SCROLL_THRESHOLD = 50;
 
@@ -12,6 +12,14 @@ export default function Feed() {
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
   const observer = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, []);
 
   const fetchFeed = useCallback(async () => {
     if (isLoading) return;
