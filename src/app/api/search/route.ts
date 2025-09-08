@@ -29,10 +29,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let apiUrl = `https://dog.ceo/api/breed/${breed}`;
-    if (subbreed) {
-      apiUrl += `/${subbreed}`;
-    }
+    let apiUrl = `https://dog.ceo/api/breed/${subbreed ? `${subbreed}/` : ''}${breed}`;
     apiUrl += `/images/random/${count}`;
     const response = await fetch(apiUrl);
 
@@ -42,8 +39,8 @@ export async function GET(request: NextRequest) {
 
     const { message: images, status } = await response.json();
 
-    if (status !== "success") {
-      throw new Error("Failed to fetch images from dog.ceo API");
+    if (status !== 'success') {
+      throw new Error('Failed to fetch images from dog.ceo API');
     }
 
     const posts = images.map((image: string, index: number) => ({

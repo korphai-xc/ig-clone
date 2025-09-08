@@ -29,8 +29,13 @@ export default function SearchFeed({ breed, onBackToFeed }: SearchFeedProps) {
 
     setIsSearching(true);
     try {
+      const breedParts = breed.split('-');
+      const breedName = breedParts[0];
+      const subbreedName = breedParts.slice(1).join('-');
+
       const queryParams = new URLSearchParams({
-        breed: breed,
+        breed: breedName,
+        subbreed: subbreedName,
         count: '10'
       });
 
